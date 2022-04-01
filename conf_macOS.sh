@@ -154,8 +154,7 @@ install_app() {
         bash \
         thunder \
         vlc \
-        google-chrome \
-        android-studio
+        google-chrome
 
     change_shell_bash
 
