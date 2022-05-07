@@ -154,12 +154,14 @@ install_app() {
         bash \
         thunder \
         vlc \
-        google-chrome
+        google-chrome \
+        android-studio
 
     change_shell_bash
 
-    # 将adb配入环境变量
+    # 将adb、emulator配入环境变量
     [ "$(grep -c "$HOME/Library/Android/sdk/platform-tools" <"$HOME/.bashrc")" == '0' ] && echo "export PATH=\"$HOME/Library/Android/sdk/platform-tools:\$PATH\"" >>"$HOME/.bashrc"
+    [ "$(grep -c "$HOME/Library/Android/sdk/emulator" <"$HOME/.bashrc")" == '0' ] && echo "export PATH=\"$HOME/Library/Android/sdk/emulator:\$PATH\"" >>"$HOME/.bashrc"
 }
 
 # 配置git
