@@ -41,13 +41,13 @@ conf_sh() {
 
 # vim配置
 conf_vim() {
-    # 软链 ~/.vimrc
+    # 生成 ~/.vimrc
     bak "${HOME}/.vimrc" "${HOME}/.vim/colors/monokai.vim"
-    ln -s "${_sh_path}/vimrc" "${HOME}/.vimrc"
+    /bin/cp -f "${_sh_path}/vimrc" "${HOME}/.vimrc"
     # 软链 ~/.vim/colors/monokai.vim
     _vim_colors_dir="${HOME}/.vim/colors"
     mkdir -p "${_vim_colors_dir}" 2>/dev/null || true
-    ln -s "${_sh_path}/monokai.vim" "${_vim_colors_dir}/monokai.vim"
+    /bin/cp -f "${_sh_path}/monokai.vim" "${_vim_colors_dir}/monokai.vim"
 }
 
 # 安装brew
