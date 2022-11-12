@@ -57,6 +57,7 @@ client_xray_info() {
 }
 
 # 配置Tor
+# TODO:安装torbrowser-launcher，打开tor browser launcher settings，勾选使用系统tor网络，配置端口为tor端口，点击安装浏览器，打开tor浏览器 -> 设置 -> 高级 -> 配置Tor浏览器联网方式（配置http代理用以连接匿名网络）
 config_tor() {
     install_app_by_pkg_manage tor
 

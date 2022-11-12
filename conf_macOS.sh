@@ -71,10 +71,8 @@ install_brew() {
 # 配置Android studio
 conf_androidstudio() {
     # 将adb、emulator配入环境变量
-    # shellcheck disable=SC2015
-    [ "$(grep -c "${HOME}/Library/Android/sdk/platform-tools" <"${HOME}/.profile")" = '0' ] && printf "export PATH=\"%s/Library/Android/sdk/platform-tools:\${PATH}\"\n" "${HOME}" >>"${HOME}/.profile" || true
-    # shellcheck disable=SC2015
-    [ "$(grep -c "${HOME}/Library/Android/sdk/emulator" <"${HOME}/.profile")" = '0' ] && printf "export PATH=\"%s/Library/Android/sdk/emulator:\${PATH}\"\n" "${HOME}" >>"${HOME}/.profile" || true
+    [ "$(grep -c "${HOME}/Library/Android/sdk/platform-tools ${HOME}/.profile")" != '0' ] || printf "export PATH=\"%s/Library/Android/sdk/platform-tools:\${PATH}\"\n" "${HOME}" >>"${HOME}/.profile"
+    [ "$(grep -c "${HOME}/Library/Android/sdk/emulator ${HOME}/.profile")" != '0' ] || printf "export PATH=\"%s/Library/Android/sdk/emulator:\${PATH}\"\n" "${HOME}" >>"${HOME}/.profile"
     return 0
 }
 
@@ -94,15 +92,31 @@ conf_git() {
     return 0
 }
 
+# 配置jdk
+conf_jdk() {
+    [ -d '/Library/Java/JavaVirtualMachines' ] || sudo mkdir -p /Library/Java/JavaVirtualMachines
+    sudo ln -sfn /usr/local/opt/openjdk@8/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-8.jdk
+    # shellcheck disable=SC2016
+    [ "$(grep -c '/usr/local/opt/openjdk@8/bin:' "$HOME/.profile")" != '0' ] || echo 'export PATH="/usr/local/opt/openjdk@8/bin:${PATH}"' >>"$HOME/.profile"
+    return 0
+}
+
+# 配置maven
+conf_maven() {
+    [ -d "$HOME/.m2" ] || mkdir "$HOME/.m2"
+    [ -f "$HOME/.m2/settings.xml" ] || cp /usr/local/Cellar/maven/3.8.6/libexec/conf/settings.xml "$HOME/.m2/"
+}
+
 # 安装软件
 install_app() {
-    install_app_by_pkg_manage gnu-tar \
-        coreutils \
+    install_app_by_pkg_manage coreutils \
         gnu-sed \
         gawk \
         grep \
         wget \
         ffmpeg \
+        openjdk@8 \
+        maven \
         the-unarchiver \
         stretchly \
         vmware-fusion \
@@ -114,12 +128,16 @@ install_app() {
         thunder \
         vlc \
         google-chrome \
-        android-studio
+        cheatsheet
+    # android-studio
 
-    conf_androidstudio
+    # conf_androidstudio
+    conf_jdk
+    conf_maven
 
     #  解决macOS的vscode中vim模式无法连按
     defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
+    defaults write com.jetbrains.intellij ApplePressAndHoldEnabled -bool false
 }
 
 # 其他操作，备忘
@@ -167,6 +185,7 @@ main() {
     # 重置$PATH，脚本中使用brew安装软件时依赖原始PATH值
     PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
     install_app
+    warn_msg '去AppStore下载adguard fro safari'
     success_msg '执行完成'
 }
 
