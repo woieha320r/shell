@@ -89,6 +89,7 @@ conf_git() {
     read -r git_email
     git config --global user.name "${git_name}"
     git config --global user.email "${git_email}"
+    warn_msg '设置/取消代理的脚本将在proxy_macOS.sh执行时生成'
     return 0
 }
 

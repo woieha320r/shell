@@ -63,6 +63,23 @@ http    127.0.0.1 10801
     vim /usr/local/etc/proxychains.conf +/\[ProxyList
 }
 
+# proxychains 无法推送git，还是得配git代理
+git_proxy() {
+    printf "#!/bin/sh
+#
+# 配置git代理
+#
+
+git config --global http.proxy 127.0.0.1:10801" >"$HOME/git_proxy_set.sh"
+
+    printf "#!/bin/sh
+#
+# 取消git代理
+#
+
+git config --global --unset http.proxy 127.0.0.1:10801" >"$HOME/git_proxy_unset.sh"
+}
+
 main() {
     node_msg '检查执行环境'
     check_env
@@ -74,6 +91,8 @@ main() {
     xray_info
     node_msg '安装proxychains'
     conf_proxychains
+    node_msg '生成开闭git代理的脚本'
+    git_proxy
     success_msg '执行完成，命令行工具可通过proxychains4使用代理，比如proxychains4 curl www.google.com'
 }
 
